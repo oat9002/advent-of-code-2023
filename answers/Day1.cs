@@ -76,43 +76,31 @@ namespace advent_of_code_2023.Answers
             {
                 var first = -1;
                 var last = -1;
-                var modLine = line;
+                var word = string.Empty;
 
-                foreach (var (key, value) in digitDict)
+                foreach (var c in line)
                 {
-                    modLine = modLine.Replace(key, value.ToString());
-                }
-
-                var length = modLine.Length;
-
-                for (int i = 0; i < length; i++)
-                {
-                    var c = modLine[i];
                     try
                     {
                         var cToInt = int.Parse(c.ToString());
 
-                        first = cToInt;
-                        break;
+                        first = first == -1 ? cToInt : first;
+                        last = cToInt; ;
                     }
                     catch
                     {
-                        continue;
-                    }
-                }
-                for (int i = length - 1; i >= 0; i--)
-                {
-                    var c = modLine[i];
-                    try
-                    {
-                        var cToInt = int.Parse(c.ToString());
+                        word += c;
 
-                        last = cToInt;
-                        break;
-                    }
-                    catch
-                    {
-                        continue;
+                        foreach (var (key, value) in digitDict)
+                        {
+                            if (word.Contains(key))
+                            {
+                                first = first == -1 ? value : first;
+                                last = value;
+                                word = string.Empty;
+                                break;
+                            }
+                        }
                     }
                 }
 
