@@ -1,6 +1,6 @@
 namespace advent_of_code_2023
 {
-    static class InputHelper
+    public static class InputHelper
     {
         public static string[] GetInput(int day, int part)
         {

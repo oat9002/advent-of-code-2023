@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 
 namespace advent_of_code_2023.Answers
