@@ -6,6 +6,6 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        Console.WriteLine(Day2.Part2());
+        Console.WriteLine(Day3.Part1());
     }
 }
