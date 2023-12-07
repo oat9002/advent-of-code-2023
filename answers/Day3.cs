@@ -71,7 +71,6 @@ public static class Day3
             }
         }
 
-        // Console.WriteLine(string.Join("\n", adjacentNum));
         return result;
     }
 
