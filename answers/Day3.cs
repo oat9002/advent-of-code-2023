@@ -5,68 +5,38 @@ public static class Day3
     public static int Part1()
     {
         var input = InputHelper.GetInput(3, 1);
-        var numbers = new List<(int Value, List<(int Row, int Col)> Coordinate)>();
-        var symbols = new List<(int Row, int Col)>();
         var result = 0;
 
         for (var i = 0; i < input.Length; i++)
         {
             var tempNum = string.Empty;
-            var tempIndex = new List<(int, int)>();
+            var isAdjacentToSymbol = false;
             for (var j = 0; j < input[i].Length; j++)
             {
                 var c = input[i][j];
 
-
                 if (c >= '0' && c <= '9')
                 {
                     tempNum += c;
-                    tempIndex.Add((i, j));
+                    isAdjacentToSymbol = isAdjacentToSymbol || IsAdjacentToSymbol(input, i, j);
                 }
-                else if (c == '.')
+
+                if (c == '.' || j == input[i].Length - 1 || IsSymbol(c))
                 {
                     if (string.IsNullOrEmpty(tempNum))
                     {
                         continue;
                     }
-                    else
+
+                    var parsedNum = int.Parse(tempNum);
+
+                    if (isAdjacentToSymbol)
                     {
-                        var parsedNum = int.Parse(tempNum);
-
-                        numbers.Add((parsedNum, tempIndex));
-                        tempNum = string.Empty;
-                        tempIndex = new List<(int, int)>();
+                        result += parsedNum;
                     }
-                }
-                else
-                {
-                    symbols.Add((i, j));
-                }
-            }
-        }
 
-        var adjacentNum = new List<int>();
-
-        foreach (var symbol in symbols)
-        {
-            for (var i = 0; i < numbers.Count; i++)
-            {
-                var (value, idxs) = numbers[i];
-                var adjacent = IsAdjacent(idxs, symbol);
-
-                if (value == 688 && adjacent)
-                {
-                    Console.WriteLine($"{value} {adjacent} {string.Join(", ", idxs)}, {string.Join(", ", symbols)}");
-                }
-
-                if (adjacent)
-                {
-                    result += value;
-                    numbers[i] = (0, idxs);
-                    if (value != 0)
-                    {
-                        adjacentNum.Add(value);
-                    }
+                    tempNum = string.Empty;
+                    isAdjacentToSymbol = false;
                 }
             }
         }
@@ -74,22 +44,33 @@ public static class Day3
         return result;
     }
 
-    private static bool IsAdjacent(List<(int Row, int Col)> numberIdxs, (int Row, int Col) symbolIdx)
+    private static bool IsSymbol(char c)
     {
-        foreach (var (row, col) in numberIdxs)
+        if (c == '.' || int.TryParse(c.ToString(), out _))
         {
-            var diffRow = Math.Abs(row - symbolIdx.Row);
-            var diffCol = Math.Abs(col - symbolIdx.Col);
+            return false;
+        }
 
-            if (diffRow == 1 && diffCol == 1 ||
-                diffRow == 1 && diffCol == 0 ||
-                diffRow == 0 && diffCol == 1)
-            {
-                return true;
-            }
+        return true;
+    }
+
+    private static bool IsAdjacentToSymbol(string[] input, int currentRow, int currentCol)
+    {
+        var maxCol = input[0].Length - 1;
+        var maxRow = input.Length - 1;
+
+        if (IsSymbol(input[Math.Max(currentRow - 1, 0)][Math.Max(currentCol - 1, 0)])
+        || IsSymbol(input[Math.Max(currentRow - 1, 0)][currentCol])
+        || IsSymbol(input[Math.Max(currentRow - 1, 0)][Math.Min(currentCol + 1, maxCol)])
+        || IsSymbol(input[currentRow][Math.Max(currentCol - 1, 0)])
+        || IsSymbol(input[currentRow][Math.Min(currentCol + 1, maxCol)])
+        || IsSymbol(input[Math.Min(currentRow + 1, maxRow)][Math.Max(currentCol - 1, 0)])
+        || IsSymbol(input[Math.Min(currentRow + 1, maxRow)][currentCol])
+        || IsSymbol(input[Math.Min(currentRow + 1, maxRow)][Math.Min(currentCol + 1, maxCol)]))
+        {
+            return true;
         }
 
         return false;
     }
-
 }

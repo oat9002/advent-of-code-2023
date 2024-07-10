@@ -6,7 +6,7 @@ namespace advent_of_code_2023
         {
             var input = File.ReadAllLines($"inputs/Day{day}_{part}.txt");
 
-            return input;
+            return input.Select(x => x.Trim()).ToArray();
         }
     }
 }
